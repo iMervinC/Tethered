@@ -1,0 +1,75 @@
+.auth-modal {
+  @include abs-center;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  width: 375px;
+
+  @include respond(sm) {
+    width: calc(100% - 25px);
+    max-width: 1000px;
+    height: 652px;
+    flex-direction: row;
+  }
+
+  &__side {
+    background-color: var(--color_main);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    gap: 10px;
+    padding: 60px 0;
+    border-radius: inherit;
+
+    & h1 {
+      -webkit-text-stroke: 1px white;
+      color: rosybrown;
+    }
+
+    & p {
+      width: 25ch;
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    @include respond(sm) {
+      width: 400px;
+      min-width: fit-content;
+    }
+  }
+
+  &--switch {
+    flex-direction: column-reverse;
+    @include respond(sm) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    & h2 {
+      color: var(--color_main);
+      margin-bottom: 40px;
+    }
+
+    @include respond(sm) {
+      width: 600px;
+      min-width: fit-content;
+    }
+
+    & form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 19px;
+    }
+  }
+}

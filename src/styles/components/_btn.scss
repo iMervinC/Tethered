@@ -12,32 +12,49 @@
   transition: color 200ms ease-in-out, transform 200ms ease-in-out,
     box-shadow 200ms ease-in-out;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: transparent;
     color: var(--color_main);
     transform: translateY(-3px);
-    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.23);
+    box-shadow: 0px 3px 0px 0px var(--color_main);
+    outline: none;
   }
 
   &:active {
     transform: translateY(0px);
+    box-shadow: none;
   }
 
   &--flush {
     background-color: transparent;
     color: var(--color_main);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--color_main);
       color: white;
+      box-shadow: 0px 3px 0px 0px white;
+    }
+
+    &:active {
+      transform: translateY(0px);
+      box-shadow: none;
     }
   }
   &--white {
     background-color: transparent;
     border: 2px solid white;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: white;
+      box-shadow: 0px 3px 0px 0px white;
+    }
+
+    &:active {
+      transform: translateY(0px);
+      box-shadow: none;
     }
   }
 }

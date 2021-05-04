@@ -3,7 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import type { TextBox as TextBoxType } from '@/utils/types'
 
-const TextBox: FC<TextBoxType> = ({ placeholder, type, value, onChange }) => {
+const TextBox: FC<TextBoxType> = ({
+  placeholder,
+  type,
+  value,
+  onChange,
+  optStyle,
+}) => {
   const icon = (_type: typeof type) => {
     switch (_type) {
       case 'user':
@@ -18,7 +24,7 @@ const TextBox: FC<TextBoxType> = ({ placeholder, type, value, onChange }) => {
   }
 
   return (
-    <span className="textbox">
+    <span className={`textbox ${optStyle}`}>
       <FontAwesomeIcon className="icon" icon={icon(type)} />
       <input
         type={type === 'user' ? 'text' : type}

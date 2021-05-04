@@ -1,18 +1,28 @@
 import { FC, useState, ChangeEvent } from 'react'
+import { motion } from 'framer-motion'
+
 import { Button, TextBox } from '@/components/UI'
 import type { Form, Field, Fields } from '@/utils/types'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useLogIn, useRegister } from '@/hooks/MutationHooks'
+import { useSetSession } from '@/hooks/useSession'
 
 const AuthForm: FC<Form> = ({ type }) => {
-  const [user, setUser] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
+  const { login, loginRes } = useLogIn()
+  const { register, registerRes } = useRegister()
+
+  const setSession = useSetSession()
+
+  console.log(loginRes)
+
   const changeHandler = (e: ChangeEvent<HTMLInputElement>, _type: Field) => {
     switch (_type) {
       case 'user':
-        setUser(e.target.value)
+        setUsername(e.target.value)
         break
       case 'email':
         setEmail(e.target.value)
@@ -30,16 +40,21 @@ const AuthForm: FC<Form> = ({ type }) => {
 
   const submitHandler = (e: any) => {
     e.preventDefault()
-    type === 'login' && console.log({ user, password })
 
-    type === 'signup' && console.log({ user, email, password, confirmPassword })
+    if (type === 'login') {
+      login({ variables: { username, password } })
+    }
+
+    if (type === 'signup') {
+      register({ variables: { username, email, password, confirmPassword } })
+    }
   }
 
   const signupFields: Fields[] = [
     {
       type: 'user',
-      placeholder: 'Name',
-      value: user,
+      placeholder: 'User Name',
+      value: username,
       change: 'user',
     },
     {
@@ -65,8 +80,8 @@ const AuthForm: FC<Form> = ({ type }) => {
   const loginFields: Fields[] = [
     {
       type: 'user',
-      placeholder: 'Name',
-      value: user,
+      placeholder: 'User Name',
+      value: username,
       change: 'user',
     },
     {
@@ -77,16 +92,15 @@ const AuthForm: FC<Form> = ({ type }) => {
     },
   ]
 
-  const FormAnim = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  }
+  if (loginRes.loading || registerRes.loading) return <p>Loading...</p>
+  if (loginRes.error || registerRes.error)
+    return (
+      <p>Error : {loginRes.error?.message || registerRes.error?.message}</p>
+    )
 
   return (
     <motion.div layout className="auth-modal__form">
       <h2>{type === 'signup' ? 'Create Account' : 'Log In to Tethered'}</h2>
-
       {type === 'signup' ? (
         <form onSubmit={submitHandler}>
           {signupFields.map((field, index) => (

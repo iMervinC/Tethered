@@ -1,5 +1,10 @@
 import type { ChangeEventHandler } from 'react'
 
+export interface AuthUser {
+  username: string
+  email: string
+  token: string
+}
 export interface Form {
   type: 'login' | 'signup'
 }
@@ -16,6 +21,7 @@ export interface TextBox {
   type: 'user' | 'password' | 'email'
   value?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
+  optStyle?: string
 }
 
 export type Field = 'user' | 'email' | 'password' | 'confirmPassword'

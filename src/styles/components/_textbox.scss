@@ -41,4 +41,17 @@
     box-shadow: 0px 3px 0px 0px var(--color_main);
     border: 2px solid var(--color_main);
   }
+
+  &--red {
+    color: var(--color_red);
+
+    .icon {
+      color: var(--color_red);
+    }
+
+    input:focus + span {
+      box-shadow: 0px 3px 0px 0px var(--color_red);
+      border: 2px solid var(--color_red);
+    }
+  }
 }

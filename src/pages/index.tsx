@@ -1,9 +1,24 @@
-import { Layout, AuthModal } from '@/components'
+import { useEffect } from 'react'
+import Router from 'next/router'
+import { Layout } from '@/components/Wrappers'
+import useSession from '@/hooks/useSession'
 
-export default function Home() {
+const Home = () => {
+  const session = useSession()
+
+  const route = Router
+
+  useEffect(() => {
+    !session && route.push('/login')
+  }, [])
+
+  if (!session) return null
+
   return (
     <Layout title="Welcome">
-      <AuthModal />
+      <h1>Home Page</h1>
     </Layout>
   )
 }
+
+export default Home

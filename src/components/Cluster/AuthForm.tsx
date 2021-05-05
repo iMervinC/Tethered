@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent } from 'react'
+import { FC, useState, ChangeEvent, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 import { Button, TextBox } from '@/components/UI'
@@ -15,9 +15,15 @@ const AuthForm: FC<Form> = ({ type }) => {
   const { login, loginRes } = useLogIn()
   const { register, registerRes } = useRegister()
 
-  const setSession = useSetSession()
+  const { newSession } = useSetSession()
 
-  console.log(loginRes)
+  useEffect(() => {
+    if (loginRes.data) newSession(loginRes.data!.login)
+  }, [loginRes])
+
+  useEffect(() => {
+    if (registerRes.data) newSession(registerRes.data!.register)
+  }, [registerRes])
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>, _type: Field) => {
     switch (_type) {

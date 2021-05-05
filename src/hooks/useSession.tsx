@@ -2,7 +2,6 @@ import {
   useState,
   createContext,
   useContext,
-  useMemo,
   useEffect,
   FC,
   Dispatch,
@@ -11,20 +10,43 @@ import {
 import { AuthUser } from '@/utils/types'
 
 type SessionType = AuthUser | null
-type SessionDispatchType = Dispatch<SetStateAction<AuthUser | null>> | null
+
+interface SessionActions {
+  newSession: (user: AuthUser) => void
+  logOut: () => void
+}
 
 const Session = createContext<SessionType>(null)
-const SessionDispatch = createContext<SessionDispatchType>(null)
+const SessionDispatch = createContext<SessionActions>({} as SessionActions)
 
 export const SessionProvider: FC = ({ children }) => {
   const [session, setSession] = useState<AuthUser | null>(null)
 
+  // Check if Session does not exist and check existing session in Local Storage
   useEffect(() => {
-    session && localStorage.setItem('Session', JSON.stringify(session))
+    if (!session && localStorage.getItem('Session')) {
+      setSession(JSON.parse(localStorage.getItem('Session')!))
+    }
+  }, [])
+
+  // Store Session to Local Storage
+  useEffect(() => {
+    if (session && !localStorage.getItem('Session')) {
+      localStorage.setItem('Session', JSON.stringify(session))
+    }
   }, [session])
 
+  const newSession: SessionActions['newSession'] = (user) => {
+    setSession(user)
+  }
+
+  const logOut = () => {
+    setSession(null)
+    localStorage.removeItem('Session')
+  }
+
   return (
-    <SessionDispatch.Provider value={setSession}>
+    <SessionDispatch.Provider value={{ newSession, logOut }}>
       <Session.Provider value={session}>{children}</Session.Provider>
     </SessionDispatch.Provider>
   )

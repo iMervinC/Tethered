@@ -1,10 +1,9 @@
-import { FC, useState, ChangeEvent, useEffect } from 'react'
+import { FC, useState, ChangeEvent } from 'react'
 import { motion } from 'framer-motion'
 
-import { Button, TextBox } from '@/components/UI'
+import { Button, TextBox, Loader, ErrorBox } from '@/components/UI'
 import type { Form, Field, Fields } from '@/utils/types'
 import { useLogIn, useRegister } from '@/hooks/MutationHooks'
-import { useSetSession } from '@/hooks/useSession'
 
 const AuthForm: FC<Form> = ({ type }) => {
   const [username, setUsername] = useState('')
@@ -12,18 +11,13 @@ const AuthForm: FC<Form> = ({ type }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  const { login, loginRes } = useLogIn()
-  const { register, registerRes } = useRegister()
-
-  const { newSession } = useSetSession()
-
-  useEffect(() => {
-    if (loginRes.data) newSession(loginRes.data!.login)
-  }, [loginRes])
-
-  useEffect(() => {
-    if (registerRes.data) newSession(registerRes.data!.register)
-  }, [registerRes])
+  const { login, loginRes, loginErr } = useLogIn({ username, password })
+  const { register, registerRes, registerErr } = useRegister({
+    username,
+    email,
+    password,
+    confirmPassword,
+  })
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>, _type: Field) => {
     switch (_type) {
@@ -48,11 +42,11 @@ const AuthForm: FC<Form> = ({ type }) => {
     e.preventDefault()
 
     if (type === 'login') {
-      login({ variables: { username, password } })
+      login()
     }
 
     if (type === 'signup') {
-      register({ variables: { username, email, password, confirmPassword } })
+      register()
     }
   }
 
@@ -98,42 +92,54 @@ const AuthForm: FC<Form> = ({ type }) => {
     },
   ]
 
-  if (loginRes.loading || registerRes.loading) return <p>Loading...</p>
-  if (loginRes.error || registerRes.error)
-    return (
-      <p>Error : {loginRes.error?.message || registerRes.error?.message}</p>
-    )
-
   return (
     <motion.div layout className="auth-modal__form">
+      {(loginRes.loading || registerRes.loading) && <Loader />}
       <h2>{type === 'signup' ? 'Create Account' : 'Log In to Tethered'}</h2>
       {type === 'signup' ? (
-        <form onSubmit={submitHandler}>
-          {signupFields.map((field, index) => (
-            <TextBox
-              key={index}
-              type={field.type}
-              placeholder={field.placeholder}
-              value={field.value}
-              onChange={(e) => changeHandler(e, field.change)}
-            />
-          ))}
+        <>
+          {registerErr!.length > 0 && <ErrorBox errors={registerErr!} />}
+          <form onSubmit={submitHandler}>
+            {signupFields.map((field, index) => {
+              return field.change === 'confirmPassword' ? (
+                <TextBox
+                  key={index}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={field.value}
+                  onChange={(e) => changeHandler(e, field.change)}
+                  optStyle={`${password !== confirmPassword && 'textbox--red'}`}
+                />
+              ) : (
+                <TextBox
+                  key={index}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  value={field.value}
+                  onChange={(e) => changeHandler(e, field.change)}
+                />
+              )
+            })}
 
-          <Button label="Sign Up" submit />
-        </form>
+            <Button label="Sign Up" submit />
+          </form>
+        </>
       ) : (
-        <form onSubmit={submitHandler}>
-          {loginFields.map((field, index) => (
-            <TextBox
-              key={index}
-              type={field.type}
-              placeholder={field.placeholder}
-              value={field.value}
-              onChange={(e) => changeHandler(e, field.change)}
-            />
-          ))}
-          <Button label="Log In" submit />
-        </form>
+        <>
+          {loginErr!.length > 0 && <ErrorBox errors={loginErr!} />}
+          <form onSubmit={submitHandler}>
+            {loginFields.map((field, index) => (
+              <TextBox
+                key={index}
+                type={field.type}
+                placeholder={field.placeholder}
+                value={field.value}
+                onChange={(e) => changeHandler(e, field.change)}
+              />
+            ))}
+            <Button label="Log In" submit />
+          </form>
+        </>
       )}
     </motion.div>
   )

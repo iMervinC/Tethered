@@ -10,15 +10,20 @@
   color: var(--color_main);
 
   input {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
     border: none;
     background-color: inherit;
-    width: calc(100% - 40px);
+    width: 90%;
     height: 100%;
 
     &:focus {
       outline: none;
       color: var(--color_main);
+    }
+
+    @include respond(sm) {
+      width: calc(100% - 40px);
+      font-size: 1.3rem;
     }
   }
 

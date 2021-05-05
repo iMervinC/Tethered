@@ -1,0 +1,14 @@
+.error-box {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--color_red);
+  gap: 2px;
+  margin-bottom: 10px;
+  li {
+    padding: 5px;
+    list-style: none;
+    color: white;
+  }
+}

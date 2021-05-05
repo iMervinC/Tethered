@@ -1,20 +1,5 @@
-import {
-  useState,
-  createContext,
-  useContext,
-  useEffect,
-  FC,
-  Dispatch,
-  SetStateAction,
-} from 'react'
-import { AuthUser } from '@/utils/types'
-
-type SessionType = AuthUser | null
-
-interface SessionActions {
-  newSession: (user: AuthUser) => void
-  logOut: () => void
-}
+import { useState, createContext, useContext, useEffect, FC } from 'react'
+import { AuthUser, SessionActions, SessionType } from '@/utils/types'
 
 const Session = createContext<SessionType>(null)
 const SessionDispatch = createContext<SessionActions>({} as SessionActions)
@@ -29,7 +14,7 @@ export const SessionProvider: FC = ({ children }) => {
     }
   }, [])
 
-  // Store Session to Local Storage
+  // Store Session to Local Storage if it does already stored
   useEffect(() => {
     if (session && !localStorage.getItem('Session')) {
       localStorage.setItem('Session', JSON.stringify(session))
@@ -42,6 +27,7 @@ export const SessionProvider: FC = ({ children }) => {
 
   const logOut = () => {
     setSession(null)
+    //Local Storage clean up
     localStorage.removeItem('Session')
   }
 

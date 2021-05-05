@@ -34,3 +34,21 @@ export type Fields = {
 }
 
 export type CheckPass = (pass: string, confPass: string) => boolean
+
+export type SessionType = AuthUser | null
+
+export interface SessionActions {
+  newSession: (user: AuthUser) => void
+  logOut: () => void
+}
+
+export interface LogInType {
+  username: string
+  password: string
+}
+export interface RegisterType {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+}

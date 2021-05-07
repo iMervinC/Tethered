@@ -6,9 +6,10 @@
   background-color: rgba(0, 0, 0, 0.24);
   z-index: 2;
   color: white;
+  display: grid;
 
   &__icon {
-    @include abs-center;
+    place-self: center;
 
     height: 3rem;
     animation: spin 2s linear infinite;

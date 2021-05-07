@@ -30,3 +30,20 @@ export const REGISTER = gql`
     }
   }
 `
+export const GET_POSTS = gql`
+  query {
+    getPosts {
+      id
+      username
+      body
+      createdAt
+      likes {
+        username
+      }
+      comments {
+        username
+        body
+      }
+    }
+  }
+`

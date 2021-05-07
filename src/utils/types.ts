@@ -52,3 +52,24 @@ export interface RegisterType {
   password: string
   confirmPassword: string
 }
+
+export interface Like {
+  username: string
+  createdAt: string
+}
+
+export interface Comment {
+  id: string
+  username: string
+  body: string
+  createdAt: string
+}
+
+export interface Post {
+  id: string
+  username: string
+  body: string
+  createdAt: string
+  likes: Like[]
+  comments: Comment[]
+}

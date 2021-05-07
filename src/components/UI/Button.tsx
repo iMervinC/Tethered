@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 interface Btn {
   label: string
-  type?: 'flush' | 'white'
+  type?: 'flush' | 'white' | 'small'
   cb?: () => void
   submit?: boolean
 }

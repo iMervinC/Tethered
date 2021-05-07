@@ -1,0 +1,27 @@
+.nav {
+  background-color: var(--color_main);
+  height: 70px;
+
+  nav {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+
+    @include respond(sm) {
+      padding: 0;
+    }
+
+    a {
+      font-weight: 600;
+      font-size: 2rem;
+      text-decoration: none;
+      color: white;
+
+      @include respond(sm) {
+        font-size: 2.5rem;
+      }
+    }
+  }
+}

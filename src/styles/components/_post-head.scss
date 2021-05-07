@@ -1,0 +1,29 @@
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &__icon {
+    background: #fff;
+    color: var(--color_main);
+    border-radius: 100%;
+    width: 35px;
+    height: 35px;
+    position: relative;
+
+    svg {
+      @include abs-center;
+      height: 20px;
+    }
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+  &__date {
+    font-weight: 600;
+    font-size: 0.9rem;
+    user-select: none;
+    filter: opacity(0.7);
+  }
+}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 import { Button, TextBox, Loader, ErrorBox } from '@/components/UI'
 import type { Form, Field, Fields } from '@/utils/types'
-import { useLogIn, useRegister } from '@/hooks/MutationHooks'
+import { useLogIn, useRegister } from '@/hooks/AuthHooks'
 
 const AuthForm: FC<Form> = ({ type }) => {
   const [username, setUsername] = useState('')

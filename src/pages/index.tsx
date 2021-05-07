@@ -1,28 +1,18 @@
-import { useEffect } from 'react'
-import Router from 'next/router'
-
-import { Button } from '@/components/UI'
+import { PostBox, PostCreate } from '@/components'
 import { Layout } from '@/components/Wrappers'
-import useSession, { useSetSession } from '@/hooks/useSession'
+import { useAllPost } from '@/hooks/PostHooks'
 
 const Home = () => {
-  const session = useSession()
-  const { logOut } = useSetSession()
-
-  const route = Router
-
-  useEffect(() => {
-    !session && route.push('/login')
-  }, [session])
-
-  console.log(session)
-
-  if (!session) return null
-
+  const { data, error, loading } = useAllPost()
+  console.log(data)
   return (
-    <Layout title="Welcome">
-      <h1>Home Page</h1>
-      <Button label="Log Out" cb={logOut} />
+    <Layout title="Welcome" auth>
+      <ul className="grid-home">
+        <PostCreate key="Create" />
+        {data?.getPosts.map((post) => (
+          <PostBox key={post.id} {...post} />
+        ))}
+      </ul>
     </Layout>
   )
 }

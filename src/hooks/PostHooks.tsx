@@ -1,5 +1,5 @@
-import { useQuery, ApolloError } from '@apollo/client'
-import { GET_POSTS } from '@/utils/gql-schema'
+import { useQuery, useMutation } from '@apollo/client'
+import { GET_POSTS, CREATE_POST } from '@/utils/gql-schema'
 import type { Post } from '@/utils/types'
 
 export const useAllPost = () => {
@@ -10,4 +10,17 @@ export const useAllPost = () => {
   })
 
   return { data, loading, error }
+}
+
+export const createPost = () => {
+  const [post, postRes] = useMutation<{ createPost: Post }, { body: string }>(
+    CREATE_POST,
+    {
+      onError(err) {
+        console.log(err)
+      },
+    }
+  )
+
+  return { post, postRes }
 }

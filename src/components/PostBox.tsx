@@ -4,24 +4,21 @@ import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { PostHeader } from '@/components/UI'
 import { Post } from '@/utils/types'
 
-const PostBox: FC<Post> = ({
-  username,
-  body,
-  createdAt,
-  likes,
-  comments,
-  id,
-}) => {
+const PostBox: FC<Post> = ({ username, body, createdAt, likes, comments }) => {
   return (
     <li className="grid-home__item">
       <PostHeader name={username} date={createdAt} />
       <span className="grid-home__item__content scroll">{body}</span>
       <div className="grid-home__item__reactions">
         <span className="heart">
-          <FontAwesomeIcon icon={faHeart} />5
+          <FontAwesomeIcon
+            icon={faHeart}
+            onClick={(e) => e.stopPropagation()}
+          />
+          {likes.length}
         </span>
         <span className="comment">
-          <FontAwesomeIcon icon={faComment} />3
+          <FontAwesomeIcon icon={faComment} /> {comments.length}
         </span>
       </div>
     </li>

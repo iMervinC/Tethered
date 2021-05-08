@@ -72,4 +72,5 @@ export interface Post {
   createdAt: string
   likes: Like[]
   comments: Comment[]
+  __typename?: string
 }

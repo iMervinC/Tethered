@@ -27,13 +27,45 @@
     width: 100%;
     max-width: 500px;
     min-width: 100%;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 20px;
     color: var(--color_text);
     font-size: 1.2rem;
+    cursor: pointer;
+    transition: box-shadow 20ms ease-in, transform 20ms ease-in;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 5px 2px rgba(0, 0, 0, 0.445);
+    }
 
     @include respond(sm) {
       min-width: 420px;
+    }
+
+    &__form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      margin-top: 10px;
+      width: 100%;
+
+      textarea {
+        flex: 1;
+        resize: none;
+        font-size: 1.2rem;
+        padding: 5px;
+        border-radius: 8px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      button {
+        align-self: flex-end;
+      }
     }
 
     &__content {
@@ -57,15 +89,20 @@
         }
       }
     }
+
+    &__post {
+      border: solid 5px black;
+    }
   }
 }
 
 .heart {
   svg {
-    transition: color 500ms ease-in;
+    transition: color 200ms ease-in;
 
     &:hover {
       cursor: pointer;
+      color: rgb(255, 82, 82);
     }
     &:active {
       animation: expand 25ms ease-out 1 forwards;

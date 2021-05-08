@@ -13,6 +13,10 @@
 
     height: 3rem;
     animation: spin 2s linear infinite;
+
+    &--post {
+      height: 4rem;
+    }
   }
 
   @keyframes spin {

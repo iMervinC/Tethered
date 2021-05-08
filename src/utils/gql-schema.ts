@@ -47,3 +47,14 @@ export const GET_POSTS = gql`
     }
   }
 `
+
+export const CREATE_POST = gql`
+  mutation CreatePost($body: String!) {
+    createPost(body: $body) {
+      id
+      username
+      createdAt
+      body
+    }
+  }
+`

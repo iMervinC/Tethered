@@ -31,7 +31,7 @@ export const REGISTER = gql`
   }
 `
 export const GET_POSTS = gql`
-  query {
+  query GetPosts {
     getPosts {
       id
       username

@@ -4,7 +4,7 @@ import { useAllPost } from '@/hooks/PostHooks'
 
 const Home = () => {
   const { data, error, loading } = useAllPost()
-  console.log(data)
+
   return (
     <Layout title="Welcome" auth>
       <ul className="grid-home">

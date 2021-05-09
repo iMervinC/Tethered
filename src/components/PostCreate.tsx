@@ -16,6 +16,7 @@ const PostCreate = () => {
     e.preventDefault()
     post({
       variables: { body },
+
       optimisticResponse: {
         createPost: {
           body,
@@ -28,7 +29,6 @@ const PostCreate = () => {
         },
       },
     })
-    setBody('')
   }
 
   return (

@@ -1,0 +1,11 @@
+.post-highlight {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.404);
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  z-index: 2;
+  top: 0;
+}

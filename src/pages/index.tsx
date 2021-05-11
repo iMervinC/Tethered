@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PostBox, PostCreate, PostLoader } from '@/components'
+import { PostBox, PostHighlight, PostCreate, PostLoader } from '@/components'
 import { Layout } from '@/components/Wrappers'
 import { useAllPost } from '@/hooks/PostHooks'
 import { Post } from '@/utils/types'
@@ -10,14 +10,7 @@ const Home = () => {
   return (
     <>
       {togglePost && (
-        <div
-          className="post-highlight"
-          onClick={() => {
-            setTogglePost(null)
-          }}
-        >
-          <PostBox {...togglePost!} cb={(e) => e.stopPropagation()} />
-        </div>
+        <PostHighlight cb={() => setTogglePost(null)} posts={togglePost} />
       )}
       <Layout title="Home" auth>
         <ul className="grid-home">

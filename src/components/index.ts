@@ -1,5 +1,6 @@
 export * from './AuthModal'
 export * from './Nav'
 export * from './PostBox'
+export * from './PostHighlight'
 export * from './PostCreate'
 export * from './PostLoader'

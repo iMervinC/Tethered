@@ -37,6 +37,7 @@ const PostCreate = () => {
 
       <form className="grid-home__item__form" onSubmit={submitHandler}>
         <textarea
+          name="Post"
           placeholder={`What's up doc!`}
           value={body}
           onChange={(e) => {

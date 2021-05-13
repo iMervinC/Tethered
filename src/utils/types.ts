@@ -55,7 +55,7 @@ export interface RegisterType {
 
 export interface Like {
   username: string
-  createdAt: string
+  createdAt?: string
 }
 
 export interface Comment {

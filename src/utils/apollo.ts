@@ -21,5 +21,17 @@ const authLink = setContext((_, { headers }) => {
 export const cleint = new ApolloClient({
   link: authLink.concat(httpLink),
   uri: 'https://mernq-server.herokuapp.com/',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Post: {
+        fields: {
+          likes: {
+            merge(existing = [], incoming: any[]) {
+              return [...incoming]
+            },
+          },
+        },
+      },
+    },
+  }),
 })

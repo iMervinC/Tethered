@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PostHeader, Button } from '@/components/UI'
-import { createPost } from '@/hooks/PostHooks'
+import { useCreatePost } from '@/hooks/PostHooks'
 import useSession from '@/hooks/useSession'
 
 const PostCreate = () => {
@@ -10,7 +10,7 @@ const PostCreate = () => {
   const {
     post,
     postRes: { data, loading },
-  } = createPost()
+  } = useCreatePost()
 
   const submitHandler = (e: any) => {
     e.preventDefault()

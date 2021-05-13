@@ -1,5 +1,5 @@
-import { useQuery, useMutation, gql } from '@apollo/client'
-import { GET_POSTS, CREATE_POST } from '@/utils/gql-schema'
+import { useQuery, useMutation } from '@apollo/client'
+import { GET_POSTS, CREATE_POST, LIKE_POST } from '@/utils/gql-schema'
 import type { Post as PostT } from '@/utils/types'
 
 export const useAllPost = () => {
@@ -12,7 +12,7 @@ export const useAllPost = () => {
   return { data, loading, error }
 }
 
-export const createPost = () => {
+export const useCreatePost = () => {
   const [post, postRes] = useMutation<{ createPost: PostT }, { body: string }>(
     CREATE_POST,
     {
@@ -33,4 +33,30 @@ export const createPost = () => {
   )
 
   return { post, postRes }
+}
+
+export const useLikePost = () => {
+  const [like, likeRes] = useMutation(LIKE_POST, {
+    onError(err) {
+      console.log(err)
+    },
+    update: (cache, { data }) => {
+      const existingPosts = cache.readQuery<{ getPosts: PostT[] }>({
+        query: GET_POSTS,
+      })
+
+      const Posts = [...existingPosts!.getPosts]
+
+      const post = Posts.findIndex((post) => post.id === data.id)
+
+      Posts[post] = data
+
+      cache.writeQuery({
+        query: GET_POSTS,
+        data: { getPosts: [...Posts] },
+      })
+    },
+  })
+
+  return { like, likeRes }
 }

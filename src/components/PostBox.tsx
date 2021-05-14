@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { PostHeader } from '@/components/UI'
@@ -61,5 +61,4 @@ const PostBox: FC<PostT> = ({
     </li>
   )
 }
-
 export { PostBox }

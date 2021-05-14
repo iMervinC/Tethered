@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PostBox, PostHighlight, PostCreate, PostLoader } from '@/components'
 import { Layout } from '@/components/Wrappers'
 import { useAllPost } from '@/hooks/PostHooks'
@@ -7,6 +7,15 @@ import { Post } from '@/utils/types'
 const Home = () => {
   const { data, error, loading } = useAllPost()
   const [togglePost, setTogglePost] = useState<Post | null>(null)
+
+  useEffect(() => {
+    // Sync Post w/ PostHighlight
+    if (togglePost) {
+      const findPost = data!.getPosts.find((p) => p.id === togglePost!.id)
+      setTogglePost(findPost!)
+    }
+  }, [data])
+
   return (
     <>
       {togglePost && (

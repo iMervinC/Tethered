@@ -1,4 +1,4 @@
-import { FC, memo } from 'react'
+import { EventHandler, FC, memo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { PostHeader } from '@/components/UI'
@@ -24,6 +24,23 @@ const PostBox: FC<PostT> = ({
 
   const likeExists = likes.find((like) => like.username === session?.username)
 
+  const clickHandler = (e: any) => {
+    e.stopPropagation()
+    like({
+      variables: { postId: id },
+      optimisticResponse: {
+        id,
+        username,
+        body,
+        createdAt,
+        likes: likeExists
+          ? likes.filter((like) => like.username !== session?.username)
+          : [...likes, { username: session?.username }],
+        comments,
+      },
+    })
+  }
+
   return (
     <li className="grid-home__item" onClick={cb}>
       <PostHeader name={username} date={createdAt} />
@@ -33,24 +50,7 @@ const PostBox: FC<PostT> = ({
           <FontAwesomeIcon
             icon={faHeart}
             color={likeExists ? '#ff7a7a' : 'white'}
-            onClick={(e) => {
-              e.stopPropagation()
-              like({
-                variables: { postId: id },
-                optimisticResponse: {
-                  id,
-                  username,
-                  body,
-                  createdAt,
-                  likes: likeExists
-                    ? likes.filter(
-                        (like) => like.username !== session?.username
-                      )
-                    : [...likes, { username: session?.username }],
-                  comments,
-                },
-              })
-            }}
+            onClick={clickHandler}
           />
           {likes.length}
         </span>

@@ -61,9 +61,51 @@ export const CREATE_POST = gql`
   }
 `
 
+export const DELETE_POST = gql``
+
 export const LIKE_POST = gql`
   mutation LikePost($postId: ID!) {
     likePost(postId: $postId) {
+      id
+      body
+      createdAt
+      username
+      likes {
+        username
+      }
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+    }
+  }
+`
+
+export const COMMENT_POST = gql`
+  mutation CommentPost($postId: ID!, $body: String!) {
+    createComment(postId: $postId, body: $body) {
+      id
+      body
+      createdAt
+      username
+      likes {
+        username
+      }
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+    }
+  }
+`
+
+export const DELETE_COMMENT = gql`
+  mutation DeleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
       id
       body
       createdAt

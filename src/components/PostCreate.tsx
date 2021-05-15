@@ -29,6 +29,7 @@ const PostCreate = () => {
         },
       },
     })
+    setBody('')
   }
 
   return (

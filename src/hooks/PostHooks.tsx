@@ -1,5 +1,10 @@
-import { useQuery, useMutation } from '@apollo/client'
-import { GET_POSTS, CREATE_POST, LIKE_POST } from '@/utils/gql-schema'
+import { useQuery, useMutation, ApolloCache } from '@apollo/client'
+import {
+  GET_POSTS,
+  CREATE_POST,
+  LIKE_POST,
+  COMMENT_POST,
+} from '@/utils/gql-schema'
 import type { Post as PostT } from '@/utils/types'
 
 export const useAllPost = () => {
@@ -26,6 +31,7 @@ export const useCreatePost = () => {
           data: { getPosts: [data?.createPost, ...existingTodos!.getPosts] },
         })
       },
+
       onError(err) {
         console.log(err)
       },
@@ -35,11 +41,36 @@ export const useCreatePost = () => {
   return { post, postRes }
 }
 
+const updatePost = (cache: ApolloCache<any>, { data }: any) => {
+  const existingPosts = cache.readQuery<{ getPosts: PostT[] }>({
+    query: GET_POSTS,
+  })
+
+  const Posts = [...existingPosts!.getPosts]
+
+  const post = Posts.findIndex((post) => post.id === data!.id)
+
+  Posts[post] = data!
+
+  cache.writeQuery({
+    query: GET_POSTS,
+    data: { getPosts: [...Posts] },
+  })
+}
+
 export const useLikePost = () => {
   const [like, likeRes] = useMutation(LIKE_POST, {
+    update: updatePost,
     onError(err) {
       console.log(err)
     },
+  })
+
+  return { like, likeRes }
+}
+
+export const useCommentPost = () => {
+  const [comment, commentRes] = useMutation<PostT>(COMMENT_POST, {
     update: (cache, { data }) => {
       const existingPosts = cache.readQuery<{ getPosts: PostT[] }>({
         query: GET_POSTS,
@@ -47,16 +78,20 @@ export const useLikePost = () => {
 
       const Posts = [...existingPosts!.getPosts]
 
-      const post = Posts.findIndex((post) => post.id === data.id)
+      const post = Posts.findIndex((post) => post.id === data!.id)
 
-      Posts[post] = data
+      Posts[post] = data!
 
       cache.writeQuery({
         query: GET_POSTS,
         data: { getPosts: [...Posts] },
       })
     },
+
+    onError(err) {
+      console.log(err)
+    },
   })
 
-  return { like, likeRes }
+  return { comment, commentRes }
 }

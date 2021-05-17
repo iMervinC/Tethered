@@ -28,7 +28,7 @@ export const useCreatePost = () => {
 
         cache.writeQuery({
           query: GET_POSTS,
-          data: { getPosts: [data?.createPost, ...existingTodos!.getPosts] },
+          data: { getPosts: [data!.createPost, ...existingTodos!.getPosts] },
         })
       },
 

@@ -34,4 +34,5 @@ export const cleint = new ApolloClient({
       },
     },
   }),
+  resolvers: { Post: { _deleted: (post) => Boolean(post._deleted) } },
 })

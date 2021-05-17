@@ -1,5 +1,24 @@
 import { gql } from '@apollo/client'
 
+export const PostFragment = gql`
+  fragment PostFrag on Post {
+    id
+    body
+    createdAt
+    username
+    likes {
+      username
+    }
+    comments {
+      id
+      body
+      username
+      createdAt
+    }
+    _deleted @client
+  }
+`
+
 export const LOG_IN = gql`
   mutation LogIn($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -34,9 +53,9 @@ export const GET_POSTS = gql`
   query GetPosts {
     getPosts {
       id
-      username
       body
       createdAt
+      username
       likes {
         username
       }
@@ -60,8 +79,6 @@ export const CREATE_POST = gql`
     }
   }
 `
-
-export const DELETE_POST = gql``
 
 export const LIKE_POST = gql`
   mutation LikePost($postId: ID!) {

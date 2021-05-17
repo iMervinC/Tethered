@@ -1,6 +1,6 @@
-import { EventHandler, FC, memo } from 'react'
+import { FC } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faComment, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { PostHeader } from '@/components/UI'
 import { Post } from '@/utils/types'
 import { useLikePost } from '@/hooks/PostHooks'
@@ -10,19 +10,13 @@ interface PostT extends Post {
   cb?: (e: any) => void
 }
 
-const PostBox: FC<PostT> = ({
-  id,
-  username,
-  body,
-  createdAt,
-  likes,
-  comments,
-  cb,
-}) => {
+const PostBox: FC<PostT> = (props) => {
+  const { id, username, body, createdAt, likes, comments, cb, _deleted } = props
+
   const { like, likeRes } = useLikePost()
   const session = useSession()
 
-  const likeExists = likes.find((like) => like.username === session?.username)
+  const likeExists = likes.find((_like) => _like.username === session?.username)
 
   const clickHandler = (e: any) => {
     e.stopPropagation()
@@ -56,6 +50,9 @@ const PostBox: FC<PostT> = ({
         </span>
         <span className="comment">
           <FontAwesomeIcon icon={faComment} /> {comments.length}
+        </span>
+        <span className="trash">
+          <FontAwesomeIcon icon={faTrash} />
         </span>
       </div>
     </li>

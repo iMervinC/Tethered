@@ -73,4 +73,5 @@ export interface Post {
   likes: Like[]
   comments: Comment[]
   __typename?: string
+  _deleted?: boolean
 }

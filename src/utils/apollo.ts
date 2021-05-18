@@ -18,7 +18,7 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-export const cleint = new ApolloClient({
+export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   uri: 'https://mernq-server.herokuapp.com/',
   cache: new InMemoryCache({

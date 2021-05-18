@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const PostFragment = gql`
-  fragment PostFrag on Post {
+  fragment PostParts on Post {
     id
     body
     createdAt
@@ -50,21 +50,10 @@ export const REGISTER = gql`
   }
 `
 export const GET_POSTS = gql`
+  ${PostFragment}
   query GetPosts {
     getPosts {
-      id
-      body
-      createdAt
-      username
-      likes {
-        username
-      }
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
+      ...PostParts
     }
   }
 `
@@ -81,61 +70,34 @@ export const CREATE_POST = gql`
 `
 
 export const LIKE_POST = gql`
+  ${PostFragment}
   mutation LikePost($postId: ID!) {
     likePost(postId: $postId) {
-      id
-      body
-      createdAt
-      username
-      likes {
-        username
-      }
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
+      ...PostParts
     }
   }
 `
 
 export const COMMENT_POST = gql`
+  ${PostFragment}
   mutation CommentPost($postId: ID!, $body: String!) {
     createComment(postId: $postId, body: $body) {
-      id
-      body
-      createdAt
-      username
-      likes {
-        username
-      }
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
+      ...PostParts
     }
   }
 `
 
 export const DELETE_COMMENT = gql`
+  ${PostFragment}
   mutation DeleteComment($postId: ID!, $commentId: ID!) {
     deleteComment(postId: $postId, commentId: $commentId) {
-      id
-      body
-      createdAt
-      username
-      likes {
-        username
-      }
-      comments {
-        id
-        body
-        username
-        createdAt
-      }
+      ...PostParts
     }
+  }
+`
+
+export const DELETE_POST = gql`
+  mutation DeletePost($postId: ID!) {
+    deletePost(postId: $postId)
   }
 `

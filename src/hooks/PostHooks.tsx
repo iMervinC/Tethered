@@ -1,11 +1,14 @@
-import { useQuery, useMutation, ApolloCache } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import {
   GET_POSTS,
   CREATE_POST,
   LIKE_POST,
   COMMENT_POST,
+  DELETE_POST,
+  PostFragment,
 } from '@/utils/gql-schema'
 import type { Post as PostT } from '@/utils/types'
+import { client } from '@/utils/apollo'
 
 export const useAllPost = () => {
   const { data, loading, error } = useQuery<{ getPosts: PostT[] }>(GET_POSTS, {
@@ -41,26 +44,24 @@ export const useCreatePost = () => {
   return { post, postRes }
 }
 
-const updatePost = (cache: ApolloCache<any>, { data }: any) => {
-  const existingPosts = cache.readQuery<{ getPosts: PostT[] }>({
-    query: GET_POSTS,
-  })
-
-  const Posts = [...existingPosts!.getPosts]
-
-  const post = Posts.findIndex((post) => post.id === data!.id)
-
-  Posts[post] = data!
-
-  cache.writeQuery({
-    query: GET_POSTS,
-    data: { getPosts: [...Posts] },
-  })
-}
-
 export const useLikePost = () => {
   const [like, likeRes] = useMutation(LIKE_POST, {
-    update: updatePost,
+    update(cache, { data }) {
+      // We get a single item.
+      const post = client.readFragment<PostT>({
+        id: `Post:${data.id}`,
+        fragment: PostFragment,
+      })
+      // Then, we update it.
+      client.writeFragment({
+        id: `Post:${data.id}`,
+        fragment: PostFragment,
+        data: {
+          ...post,
+          likes: data.likes,
+        },
+      })
+    },
     onError(err) {
       console.log(err)
     },
@@ -70,21 +71,23 @@ export const useLikePost = () => {
 }
 
 export const useCommentPost = () => {
-  const [comment, commentRes] = useMutation<PostT>(COMMENT_POST, {
+  const [comment, commentRes] = useMutation<
+    PostT,
+    { postId: string; body: string }
+  >(COMMENT_POST, {
     update: (cache, { data }) => {
-      const existingPosts = cache.readQuery<{ getPosts: PostT[] }>({
-        query: GET_POSTS,
+      const post = client.readFragment<PostT>({
+        id: `Post:${data!.id}`,
+        fragment: PostFragment,
       })
-
-      const Posts = [...existingPosts!.getPosts]
-
-      const post = Posts.findIndex((post) => post.id === data!.id)
-
-      Posts[post] = data!
-
-      cache.writeQuery({
-        query: GET_POSTS,
-        data: { getPosts: [...Posts] },
+      // Then, we update it.
+      client.writeFragment({
+        id: `Post:${data!.id}`,
+        fragment: PostFragment,
+        data: {
+          ...post,
+          comments: data!.comments,
+        },
       })
     },
 
@@ -94,4 +97,33 @@ export const useCommentPost = () => {
   })
 
   return { comment, commentRes }
+}
+
+export const useDeletePost = () => {
+  const [deletePost, deletePostRes] = useMutation(DELETE_POST, {
+    update: (cache, { data }) => {
+      console.log(data)
+
+      // We get a single item.
+      const post = client.readFragment<PostT>({
+        id: `Post:${data.postId}`,
+        fragment: PostFragment,
+      })
+      // Then, we update it.
+
+      client.writeFragment({
+        id: `Post:${data.postId}`,
+        fragment: PostFragment,
+        data: {
+          ...post,
+          _deleted: true,
+        },
+      })
+    },
+    onError(err) {
+      console.log(err)
+    },
+  })
+
+  return { deletePost, deletePostRes }
 }

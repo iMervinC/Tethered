@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComment, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { PostHeader } from '@/components/UI'
 import { Post } from '@/utils/types'
-import { useLikePost } from '@/hooks/PostHooks'
+import { useLikePost, useDeletePost } from '@/hooks/PostHooks'
 import useSession from '@/hooks/useSession'
 
 interface PostT extends Post {
@@ -11,14 +11,25 @@ interface PostT extends Post {
 }
 
 const PostBox: FC<PostT> = (props) => {
-  const { id, username, body, createdAt, likes, comments, cb, _deleted } = props
+  const {
+    id,
+    username,
+    body,
+    createdAt,
+    likes,
+    comments,
+    cb,
+    _deleted,
+    __typename,
+  } = props
 
-  const { like, likeRes } = useLikePost()
+  const { like } = useLikePost()
+  const { deletePost } = useDeletePost()
   const session = useSession()
 
   const likeExists = likes.find((_like) => _like.username === session?.username)
 
-  const clickHandler = (e: any) => {
+  const likeHandler = (e: any) => {
     e.stopPropagation()
     like({
       variables: { postId: id },
@@ -31,7 +42,16 @@ const PostBox: FC<PostT> = (props) => {
           ? likes.filter((like) => like.username !== session?.username)
           : [...likes, { username: session?.username }],
         comments,
+        __typename,
       },
+    })
+  }
+
+  const trashHandler = (e: any) => {
+    e.stopPropagation()
+    deletePost({
+      variables: { postId: id },
+      optimisticResponse: { postId: id },
     })
   }
 
@@ -44,7 +64,7 @@ const PostBox: FC<PostT> = (props) => {
           <FontAwesomeIcon
             icon={faHeart}
             color={likeExists ? '#ff7a7a' : 'white'}
-            onClick={clickHandler}
+            onClick={likeHandler}
           />
           {likes.length}
         </span>
@@ -52,7 +72,7 @@ const PostBox: FC<PostT> = (props) => {
           <FontAwesomeIcon icon={faComment} /> {comments.length}
         </span>
         <span className="trash">
-          <FontAwesomeIcon icon={faTrash} />
+          <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
         </span>
       </div>
     </li>

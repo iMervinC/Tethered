@@ -17,6 +17,12 @@
       padding: 0;
     }
 
+    span {
+      display: flex;
+
+      gap: 10px;
+    }
+
     a {
       font-weight: 600;
       font-size: 2rem;

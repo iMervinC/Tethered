@@ -1,16 +1,20 @@
 import { FormEvent, FC, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+
 import { PostBox } from '@/components'
 import { Post } from '@/utils/types'
 import { Button, PostHeader } from './UI'
-import { useCommentPost } from '@/hooks/PostHooks'
+import { useCommentPost, useDeleteComment } from '@/hooks/PostHooks'
 import useSession from '@/hooks/useSession'
 
 const PostHighlight: FC<{ posts: Post; cb: () => void }> = ({ posts, cb }) => {
   const [post, setPost] = useState('')
   const { comment, commentRes } = useCommentPost()
+  const { deleteComment } = useDeleteComment()
   const session = useSession()
 
-  const submitHandler = (e: FormEvent) => {
+  const commentHandler = (e: FormEvent) => {
     e.preventDefault()
     comment({
       variables: { postId: posts.id, body: post },
@@ -32,6 +36,20 @@ const PostHighlight: FC<{ posts: Post; cb: () => void }> = ({ posts, cb }) => {
     setPost('')
   }
 
+  const trashHandler = (commentId: string) => {
+    deleteComment({
+      variables: { commentId, postId: posts.id },
+      optimisticResponse: {
+        deleteComment: {
+          ...posts,
+          comments: posts.comments.filter(
+            (comment) => comment.id !== commentId
+          ),
+        },
+      },
+    })
+  }
+
   return (
     <div className="post-highlight" onClick={cb}>
       <PostBox {...posts!} cb={(e) => e.stopPropagation()} />
@@ -41,14 +59,24 @@ const PostHighlight: FC<{ posts: Post; cb: () => void }> = ({ posts, cb }) => {
             posts.comments.map((comment) => (
               <span key={comment.id} className="post-highlight__box__comment">
                 <PostHeader name={comment.username} />
-                <p>{comment.body}</p>
+                <span className="post-highlight__box__comment__body">
+                  <p>{comment.body}</p>
+                  {session!.username === comment.username && (
+                    <span className="trash">
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        onClick={() => trashHandler(comment.id)}
+                      />
+                    </span>
+                  )}
+                </span>
               </span>
             ))
           ) : (
             <span className="post-highlight__box__no-comment">No Comments</span>
           )}
         </div>
-        <form className="post-highlight__box__post" onSubmit={submitHandler}>
+        <form className="post-highlight__box__post" onSubmit={commentHandler}>
           <textarea
             name="Post"
             value={post}

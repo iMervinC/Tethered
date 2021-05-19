@@ -35,7 +35,7 @@ const PostCreate = () => {
 
   return (
     <li className="grid-home__item grid-home__item__post">
-      <PostHeader name={session!.username} />
+      <PostHeader name={session!.username} type="welcome" />
 
       <form className="grid-home__item__form" onSubmit={submitHandler}>
         <textarea

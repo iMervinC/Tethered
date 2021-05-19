@@ -5,6 +5,7 @@ import {
   LIKE_POST,
   COMMENT_POST,
   DELETE_POST,
+  DELETE_COMMENT,
   PostFragment,
 } from '@/utils/gql-schema'
 import type { Post as PostT } from '@/utils/types'
@@ -127,4 +128,35 @@ export const useDeletePost = () => {
   })
 
   return { deletePost, deletePostRes }
+}
+
+export const useDeleteComment = () => {
+  const [deleteComment] = useMutation<
+    { deleteComment: PostT },
+    { postId: string; commentId: string }
+  >(DELETE_COMMENT, {
+    update: (cache, { data }) => {
+      // Get Post
+      const post = cache.readFragment<PostT>({
+        id: `Post:${data!.deleteComment.id}`,
+        fragment: PostFragment,
+      })
+
+      // Then, we update it.
+
+      cache.writeFragment({
+        id: `Post:${data!.deleteComment.id}`,
+        fragment: PostFragment,
+        data: {
+          ...post,
+          comments: data?.deleteComment.comments,
+        },
+      })
+    },
+    onError(err) {
+      console.log(err)
+    },
+  })
+
+  return { deleteComment }
 }

@@ -33,6 +33,7 @@
       margin-right: 5px;
       height: calc(100% - 100px);
     }
+
     &__no-comment {
       text-align: center;
       font-size: 1.2rem;
@@ -46,8 +47,16 @@
       padding: 10px;
       background-color: var(--color_main);
 
-      p {
+      &__body {
         padding: 10px 0;
+        display: flex;
+        p {
+          width: 100%;
+        }
+
+        .trash {
+          align-self: flex-end;
+        }
       }
     }
 

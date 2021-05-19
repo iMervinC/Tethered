@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/UI'
+import { Button, PostHeader } from '@/components/UI'
 import useSession, { useSetSession } from '@/hooks/useSession'
 
 const Nav = () => {
@@ -14,7 +14,10 @@ const Nav = () => {
         <Link href="/">
           <a>Tethered</a>
         </Link>
-        <Button label="Log Out" type="small" cb={logOut} />
+        <span>
+          <PostHeader name={session.username} />
+          <Button label="Log Out" type="small" cb={logOut} />
+        </span>
       </nav>
     </div>
   )

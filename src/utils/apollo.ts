@@ -30,6 +30,20 @@ export const client = new ApolloClient({
               return [...incoming]
             },
           },
+          comments: {
+            merge(existing = [], incoming: any[]) {
+              return [...incoming]
+            },
+          },
+        },
+      },
+      Query: {
+        fields: {
+          getPosts: {
+            merge(existing = [], incoming: any[]) {
+              return [...incoming]
+            },
+          },
         },
       },
     },

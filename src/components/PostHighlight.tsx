@@ -15,16 +15,18 @@ const PostHighlight: FC<{ posts: Post; cb: () => void }> = ({ posts, cb }) => {
     comment({
       variables: { postId: posts.id, body: post },
       optimisticResponse: {
-        ...posts,
-        comments: [
-          {
-            id: 'TEMP_ID',
-            username: session!.username,
-            body: post,
-            createdAt: new Date().toISOString(),
-          },
-          ...posts.comments,
-        ],
+        createComment: {
+          ...posts,
+          comments: [
+            {
+              id: 'TEMP_ID',
+              username: session!.username,
+              body: post,
+              createdAt: new Date().toISOString(),
+            },
+            ...posts.comments,
+          ],
+        },
       },
     })
     setPost('')

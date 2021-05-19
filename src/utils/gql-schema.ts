@@ -28,6 +28,7 @@ export const LOG_IN = gql`
     }
   }
 `
+
 export const REGISTER = gql`
   mutation Register(
     $username: String!
@@ -49,6 +50,7 @@ export const REGISTER = gql`
     }
   }
 `
+
 export const GET_POSTS = gql`
   ${PostFragment}
   query GetPosts {
@@ -59,12 +61,10 @@ export const GET_POSTS = gql`
 `
 
 export const CREATE_POST = gql`
+  ${PostFragment}
   mutation CreatePost($body: String!) {
     createPost(body: $body) {
-      id
-      username
-      createdAt
-      body
+      ...PostParts
     }
   }
 `
@@ -98,6 +98,9 @@ export const DELETE_COMMENT = gql`
 
 export const DELETE_POST = gql`
   mutation DeletePost($postId: ID!) {
-    deletePost(postId: $postId)
+    deletePost(postId: $postId) {
+      postId
+      status
+    }
   }
 `

@@ -26,6 +26,7 @@ const PostCreate = () => {
           likes: [],
           id: 'Temp_ID',
           __typename: 'Post',
+          _deleted: false,
         },
       },
     })

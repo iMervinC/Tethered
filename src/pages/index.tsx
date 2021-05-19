@@ -25,9 +25,11 @@ const Home = () => {
         <ul className="grid-home">
           <PostCreate key="Create" />
           {loading && <PostLoader />}
-          {data?.getPosts.map((post) => (
-            <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
-          ))}
+          {data?.getPosts
+            .filter((p) => !p._deleted)
+            .map((post) => (
+              <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
+            ))}
         </ul>
       </Layout>
     </>

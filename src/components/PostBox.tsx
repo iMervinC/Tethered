@@ -51,7 +51,7 @@ const PostBox: FC<PostT> = (props) => {
     e.stopPropagation()
     deletePost({
       variables: { postId: id },
-      optimisticResponse: { postId: id },
+      optimisticResponse: { deletePost: { postId: id } },
     })
   }
 
@@ -71,9 +71,11 @@ const PostBox: FC<PostT> = (props) => {
         <span className="comment">
           <FontAwesomeIcon icon={faComment} /> {comments.length}
         </span>
-        <span className="trash">
-          <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
-        </span>
+        {session?.username === username && (
+          <span className="trash">
+            <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
+          </span>
+        )}
       </div>
     </li>
   )

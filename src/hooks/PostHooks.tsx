@@ -25,13 +25,15 @@ export const useCreatePost = () => {
     CREATE_POST,
     {
       update: (cache, { data }) => {
-        const existingTodos = cache.readQuery<{ getPosts: PostT[] }>({
+        const existingPosts = client.readQuery<{ getPosts: PostT[] }>({
           query: GET_POSTS,
         })
 
-        cache.writeQuery({
+        const newPosts = [data!.createPost, ...existingPosts!.getPosts]
+
+        client.writeQuery({
           query: GET_POSTS,
-          data: { getPosts: [data!.createPost, ...existingTodos!.getPosts] },
+          data: { getPosts: newPosts },
         })
       },
 
@@ -72,21 +74,21 @@ export const useLikePost = () => {
 
 export const useCommentPost = () => {
   const [comment, commentRes] = useMutation<
-    PostT,
+    { createComment: PostT },
     { postId: string; body: string }
   >(COMMENT_POST, {
     update: (cache, { data }) => {
-      const post = client.readFragment<PostT>({
-        id: `Post:${data!.id}`,
+      const post = client.readFragment({
+        id: `Post:${data?.createComment.id}`,
         fragment: PostFragment,
       })
       // Then, we update it.
       client.writeFragment({
-        id: `Post:${data!.id}`,
+        id: `Post:${data?.createComment.id}`,
         fragment: PostFragment,
         data: {
           ...post,
-          comments: data!.comments,
+          comments: data?.createComment.comments,
         },
       })
     },
@@ -102,17 +104,15 @@ export const useCommentPost = () => {
 export const useDeletePost = () => {
   const [deletePost, deletePostRes] = useMutation(DELETE_POST, {
     update: (cache, { data }) => {
-      console.log(data)
-
       // We get a single item.
-      const post = client.readFragment<PostT>({
+      const post = cache.readFragment<PostT>({
         id: `Post:${data.postId}`,
         fragment: PostFragment,
       })
       // Then, we update it.
 
-      client.writeFragment({
-        id: `Post:${data.postId}`,
+      cache.writeFragment({
+        id: `Post:${data.deletePost.postId}`,
         fragment: PostFragment,
         data: {
           ...post,
@@ -123,6 +123,7 @@ export const useDeletePost = () => {
     onError(err) {
       console.log(err)
     },
+    refetchQueries: [{ query: GET_POSTS }],
   })
 
   return { deletePost, deletePostRes }

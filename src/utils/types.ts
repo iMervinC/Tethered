@@ -1,5 +1,9 @@
 import type { ChangeEventHandler } from 'react'
+import type { NormalizedCacheObject, ApolloClient } from '@apollo/client'
 
+export type InitialApolloState = (
+  initialState?: NormalizedCacheObject | null
+) => ApolloClient<NormalizedCacheObject>
 export interface AuthUser {
   username: string
   email: string

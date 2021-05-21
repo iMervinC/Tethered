@@ -104,3 +104,23 @@ export const DELETE_POST = gql`
     }
   }
 `
+
+export const INITIAL_POSTS = gql`
+  query GetPosts {
+    getPosts {
+      id
+      body
+      createdAt
+      username
+      likes {
+        username
+      }
+      comments {
+        id
+        body
+        username
+        createdAt
+      }
+    }
+  }
+`

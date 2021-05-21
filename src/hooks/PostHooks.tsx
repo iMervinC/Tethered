@@ -9,7 +9,9 @@ import {
   PostFragment,
 } from '@/utils/gql-schema'
 import type { Post as PostT } from '@/utils/types'
-import { client } from '@/utils/apollo'
+import { initializeApollo } from '@/utils/apollo'
+
+const client = initializeApollo()
 
 export const useAllPost = () => {
   const { data, loading, error } = useQuery<{ getPosts: PostT[] }>(GET_POSTS, {

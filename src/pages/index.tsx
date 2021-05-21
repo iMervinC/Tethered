@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimateSharedLayout } from 'framer-motion'
 import { PostBox, PostHighlight, PostCreate, PostLoader } from '@/components'
 import { Layout } from '@/components/Wrappers'
 import { useAllPost } from '@/hooks/PostHooks'
 import { Post } from '@/utils/types'
+import { initializeApollo } from '@/utils/apollo'
+import { GET_POSTS } from '@/utils/gql-schema'
 
 const Home = () => {
   const { data, error, loading } = useAllPost()
@@ -34,6 +37,20 @@ const Home = () => {
       </Layout>
     </>
   )
+}
+
+export async function getStaticProps() {
+  const apolloClient = initializeApollo()
+
+  await apolloClient.query({
+    query: GET_POSTS,
+  })
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+  }
 }
 
 export default Home

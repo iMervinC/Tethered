@@ -43,6 +43,17 @@
       min-width: 420px;
     }
 
+    &__head {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-content: center;
+
+      svg:hover {
+        color: red;
+      }
+    }
+
     &__form {
       display: flex;
       flex-direction: column;

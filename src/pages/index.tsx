@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimateSharedLayout } from 'framer-motion'
 import { PostBox, PostHighlight, PostCreate, PostLoader } from '@/components'
 import { Layout } from '@/components/Wrappers'
+import { ErrorPop } from '@/components/UI'
 import { useAllPost } from '@/hooks/PostHooks'
 import { Post } from '@/utils/types'
 import { initializeApollo } from '@/utils/apollo'
@@ -9,6 +10,7 @@ import { GET_POSTS } from '@/utils/gql-schema'
 
 const Home = () => {
   const { data, error, loading } = useAllPost()
+  const [errToggle, setErrToggle] = useState(false)
   const [togglePost, setTogglePost] = useState<Post | null>(null)
 
   useEffect(() => {
@@ -19,23 +21,30 @@ const Home = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    error && setErrToggle(true)
+  }, [error])
+
   return (
-    <>
+    <Layout title="Home" auth>
+      {errToggle && <ErrorPop errors={error!} cb={() => setErrToggle(false)} />}
       {togglePost && (
-        <PostHighlight cb={() => setTogglePost(null)} posts={togglePost} />
+        <PostHighlight
+          cb={() => setTogglePost(null)}
+          posts={togglePost}
+          close={() => setTogglePost(null)}
+        />
       )}
-      <Layout title="Home" auth>
-        <ul className="grid-home">
-          <PostCreate key="Create" />
-          {loading && <PostLoader />}
-          {data?.getPosts
-            .filter((p) => !p._deleted)
-            .map((post) => (
-              <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
-            ))}
-        </ul>
-      </Layout>
-    </>
+      <ul className="grid-home">
+        <PostCreate key="Create" />
+        {loading && <PostLoader />}
+        {data?.getPosts
+          .filter((p) => !p._deleted)
+          .map((post) => (
+            <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
+          ))}
+      </ul>
+    </Layout>
   )
 }
 

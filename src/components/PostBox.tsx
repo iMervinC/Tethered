@@ -1,13 +1,20 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComment, faHeart, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { PostHeader } from '@/components/UI'
+import {
+  faComment,
+  faHeart,
+  faTrash,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons'
+import { PostHeader, ErrorPop } from '@/components/UI'
 import { Post } from '@/utils/types'
 import { useLikePost, useDeletePost } from '@/hooks/PostHooks'
 import useSession from '@/hooks/useSession'
 
 interface PostT extends Post {
   cb?: (e: any) => void
+  close?: (e: any) => void
+  highlight?: boolean
 }
 
 const PostBox: FC<PostT> = (props) => {
@@ -19,12 +26,13 @@ const PostBox: FC<PostT> = (props) => {
     likes,
     comments,
     cb,
-    _deleted,
     __typename,
+    close,
+    highlight,
   } = props
-
-  const { like } = useLikePost()
-  const { deletePost } = useDeletePost()
+  const [errToggle, setErrToggle] = useState(false)
+  const { like, likeErr } = useLikePost()
+  const { deletePost, deletePostErr } = useDeletePost()
   const session = useSession()
 
   const likeExists = likes.find((_like) => _like.username === session?.username)
@@ -56,28 +64,41 @@ const PostBox: FC<PostT> = (props) => {
   }
 
   return (
-    <li className="grid-home__item" onClick={cb}>
-      <PostHeader name={username} date={createdAt} />
-      <span className="grid-home__item__content scroll">{body}</span>
-      <div className="grid-home__item__reactions">
-        <span className="heart">
-          <FontAwesomeIcon
-            icon={faHeart}
-            color={likeExists ? '#ff7a7a' : 'white'}
-            onClick={likeHandler}
-          />
-          {likes.length}
-        </span>
-        <span className="comment">
-          <FontAwesomeIcon icon={faComment} /> {comments.length}
-        </span>
-        {session?.username === username && (
-          <span className="trash">
-            <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
+    <>
+      {errToggle && (
+        <ErrorPop
+          errors={likeErr! || deletePostErr!}
+          cb={() => setErrToggle(false)}
+        />
+      )}
+      <li className="grid-home__item" onClick={cb}>
+        <div className="grid-home__item__head">
+          <PostHeader name={username} date={createdAt} />
+          {highlight && (
+            <FontAwesomeIcon icon={faTimes} onClick={close} size="lg" />
+          )}
+        </div>
+        <span className="grid-home__item__content scroll">{body}</span>
+        <div className="grid-home__item__reactions">
+          <span className="heart">
+            <FontAwesomeIcon
+              icon={faHeart}
+              color={likeExists ? '#ff7a7a' : 'white'}
+              onClick={likeHandler}
+            />
+            {likes.length}
           </span>
-        )}
-      </div>
-    </li>
+          <span className="comment">
+            <FontAwesomeIcon icon={faComment} /> {comments.length}
+          </span>
+          {session?.username === username && (
+            <span className="trash">
+              <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
+            </span>
+          )}
+        </div>
+      </li>
+    </>
   )
 }
 export { PostBox }

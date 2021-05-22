@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 
 let apolloClient: ApolloClient<NormalizedCacheObject>
 
-const createIsomorphicLink = () => {
+const createAuthLink = () => {
   if (!(typeof window === 'undefined')) {
     const httpLink = createHttpLink({
       uri: 'https://mernq-server.herokuapp.com/',
@@ -36,7 +36,7 @@ const createIsomorphicLink = () => {
 export const createApolloClient = () =>
   new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: createIsomorphicLink(),
+    link: createAuthLink(),
     uri: 'https://mernq-server.herokuapp.com/',
     cache: new InMemoryCache({
       typePolicies: {

@@ -79,3 +79,8 @@ export interface Post {
   __typename?: string
   _deleted?: boolean
 }
+
+export interface MyErrors {
+  code: 'UNAUTHENTICATED' | 'BAD_USER_INPUT'
+  errors?: string[] | null
+}

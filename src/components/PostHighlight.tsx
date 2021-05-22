@@ -17,24 +17,26 @@ const PostHighlight: FC<{ posts: Post; cb: () => void; close?: () => void }> =
 
     const commentHandler = (e: FormEvent) => {
       e.preventDefault()
-      comment({
-        variables: { postId: posts.id, body: post },
-        optimisticResponse: {
-          createComment: {
-            ...posts,
-            comments: [
-              {
-                id: 'TEMP_ID',
-                username: session!.username,
-                body: post,
-                createdAt: new Date().toISOString(),
-              },
-              ...posts.comments,
-            ],
+      if (post.trim() !== '') {
+        comment({
+          variables: { postId: posts.id, body: post },
+          optimisticResponse: {
+            createComment: {
+              ...posts,
+              comments: [
+                {
+                  id: 'TEMP_ID',
+                  username: session!.username,
+                  body: post,
+                  createdAt: new Date().toISOString(),
+                },
+                ...posts.comments,
+              ],
+            },
           },
-        },
-      })
-      setPost('')
+        })
+        setPost('')
+      }
     }
 
     const trashHandler = (commentId: string) => {

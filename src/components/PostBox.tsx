@@ -71,7 +71,12 @@ const PostBox: FC<PostT> = (props) => {
           cb={() => setErrToggle(false)}
         />
       )}
-      <li className="grid-home__item" onClick={cb}>
+      <li
+        className={`grid-home__item ${
+          highlight && 'grid-home__item--highlight'
+        }`}
+        onClick={cb}
+      >
         <div className="grid-home__item__head">
           <PostHeader name={username} date={createdAt} />
           {highlight && (

@@ -34,6 +34,12 @@
     cursor: pointer;
     transition: box-shadow 20ms ease-in, transform 20ms ease-in;
 
+    &--highlight {
+      min-width: 97%;
+      width: auto;
+      max-width: 500px;
+    }
+
     &:hover {
       transform: translateY(-3px);
       box-shadow: 0 5px 5px 2px rgba(0, 0, 0, 0.445);

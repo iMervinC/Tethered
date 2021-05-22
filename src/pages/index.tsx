@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { motion, AnimateSharedLayout } from 'framer-motion'
 import { PostBox, PostHighlight, PostCreate, PostLoader } from '@/components'
 import { Layout } from '@/components/Wrappers'

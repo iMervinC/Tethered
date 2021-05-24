@@ -36,8 +36,12 @@
 
     &--highlight {
       min-width: 97%;
-      width: auto;
       max-width: 500px;
+      width: auto;
+
+      @include respond(sm) {
+        width: 100%;
+      }
     }
 
     &:hover {

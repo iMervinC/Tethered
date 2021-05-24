@@ -28,22 +28,24 @@ const Home = () => {
   return (
     <Layout title="Home" auth>
       {errToggle && <ErrorPop errors={error!} cb={() => setErrToggle(false)} />}
-      {togglePost && (
-        <PostHighlight
-          cb={() => setTogglePost(null)}
-          posts={togglePost}
-          close={() => setTogglePost(null)}
-        />
-      )}
-      <ul className="grid-home">
-        <PostCreate key="Create" />
-        {loading && <PostLoader />}
-        {data?.getPosts
-          .filter((p) => !p._deleted)
-          .map((post) => (
-            <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
-          ))}
-      </ul>
+      <AnimateSharedLayout>
+        <motion.ul className="grid-home">
+          <PostCreate key="Create" />
+          {loading && <PostLoader />}
+          {data?.getPosts
+            .filter((p) => !p._deleted)
+            .map((post) => (
+              <PostBox key={post.id} {...post} cb={() => setTogglePost(post)} />
+            ))}
+        </motion.ul>
+        {togglePost && (
+          <PostHighlight
+            cb={() => setTogglePost(null)}
+            posts={togglePost}
+            close={() => setTogglePost(null)}
+          />
+        )}
+      </AnimateSharedLayout>
     </Layout>
   )
 }

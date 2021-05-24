@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, memo, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faComment,
@@ -6,6 +6,7 @@ import {
   faTrash,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons'
+import { motion } from 'framer-motion'
 import { PostHeader, ErrorPop } from '@/components/UI'
 import { Post } from '@/utils/types'
 import { useLikePost, useDeletePost } from '@/hooks/PostHooks'
@@ -71,20 +72,23 @@ const PostBox: FC<PostT> = (props) => {
           cb={() => setErrToggle(false)}
         />
       )}
-      <li
+      <motion.li
+        layout
         className={`grid-home__item ${
           highlight && 'grid-home__item--highlight'
         }`}
         onClick={cb}
       >
-        <div className="grid-home__item__head">
+        <motion.div className="grid-home__item__head">
           <PostHeader name={username} date={createdAt} />
           {highlight && (
             <FontAwesomeIcon icon={faTimes} onClick={close} size="lg" />
           )}
-        </div>
-        <span className="grid-home__item__content scroll">{body}</span>
-        <div className="grid-home__item__reactions">
+        </motion.div>
+        <motion.span className="grid-home__item__content scroll">
+          {body}
+        </motion.span>
+        <motion.div className="grid-home__item__reactions">
           <span className="heart">
             <FontAwesomeIcon
               icon={faHeart}
@@ -93,16 +97,16 @@ const PostBox: FC<PostT> = (props) => {
             />
             {likes.length}
           </span>
-          <span className="comment">
+          <motion.span className="comment">
             <FontAwesomeIcon icon={faComment} /> {comments.length}
-          </span>
+          </motion.span>
           {session?.username === username && (
-            <span className="trash">
+            <motion.span className="trash">
               <FontAwesomeIcon icon={faTrash} onClick={trashHandler} />
-            </span>
+            </motion.span>
           )}
-        </div>
-      </li>
+        </motion.div>
+      </motion.li>
     </>
   )
 }
